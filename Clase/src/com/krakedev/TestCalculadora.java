@@ -12,6 +12,9 @@ public class TestCalculadora {
 		
 		double resultadoMultiplicacion = calcu.multiplicar(10, 5);
 		System.out.println("RESULTADO MULTIPLICACION: " + resultadoMultiplicacion);
+		
+		double resultadoDivision = calcu.dividir(10, 2);
+		System.out.println("RESULTADO DIVISON: " + resultadoDivision);
 	}
 
 }
