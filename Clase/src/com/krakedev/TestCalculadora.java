@@ -10,6 +10,8 @@ public class TestCalculadora {
 		System.out.println("RESULTADO SUMA: " + resultadoSuma);
 		System.out.println("RESULTADO RESTA: " + resultadoResta);
 		
+		double resultadoMultiplicacion = calcu.multiplicar(10, 5);
+		System.out.println("RESULTADO MULTIPLICACION: " + resultadoMultiplicacion);
 	}
 
 }
