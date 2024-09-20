@@ -23,6 +23,11 @@ public class TestRectangulo {
 		r3.altura = 2;
 		double area3 = r3.calcularPerimetro();
 		System.out.println("Perímetro: " + area3);
+		
+		Rectangulo r4 = new Rectangulo();
+		r4.base = 4;
+		double area4 = r4.calcularAreaCuadrado();
+		System.out.println("Área de un cuadrado: " + area4);
 	}
 
 }

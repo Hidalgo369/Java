@@ -13,4 +13,9 @@ public class Rectangulo {
 		double perimetro = (base + base) + (altura + altura);
 		return perimetro;
 	}
+	
+	public double calcularAreaCuadrado() {
+		double cuadrado = base * base;
+		return cuadrado;
+	}
 }
