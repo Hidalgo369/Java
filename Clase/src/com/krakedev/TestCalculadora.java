@@ -18,6 +18,8 @@ public class TestCalculadora {
 		
 		double promedio = calcu.promedio(10, 8, 9);
 		System.out.println("PROMEDIO: " + promedio);
+		
+		calcu.mostrarResultado();
 	}
 
 }
