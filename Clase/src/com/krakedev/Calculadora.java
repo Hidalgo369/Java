@@ -22,4 +22,9 @@ public class Calculadora {
 		return resultado;
 	}
 	
+	public double promedio(double valor1,double valor2,double valor3) {
+		double resultado = (valor1 + valor2 + valor3) / 3;
+		return resultado;
+	}
+	
 }

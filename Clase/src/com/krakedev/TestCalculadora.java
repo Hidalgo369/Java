@@ -15,6 +15,9 @@ public class TestCalculadora {
 		
 		double resultadoDivision = calcu.dividir(10, 2);
 		System.out.println("RESULTADO DIVISON: " + resultadoDivision);
+		
+		double promedio = calcu.promedio(10, 8, 9);
+		System.out.println("PROMEDIO: " + promedio);
 	}
 
 }
