@@ -1,6 +1,7 @@
 package com.krakedev;
 
 public class Rectangulo {
+	
 	public int base;
 	public int altura;
 	
@@ -14,8 +15,4 @@ public class Rectangulo {
 		return perimetro;
 	}
 	
-	public double calcularAreaCuadrado() {
-		double cuadrado = base * base;
-		return cuadrado;
-	}
 }
