@@ -1,6 +1,7 @@
 package com.krakedev;
 
 public class Mensajería {
+	
 	public void saludar() {
 		System.out.println("Hola Mundo!");
 	}
