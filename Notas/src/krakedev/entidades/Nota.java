@@ -25,6 +25,7 @@ public class Nota {
 			System.out.println("Nota[Materia[Codigo=" + materia.getCodigo() + ", Nombre=" + materia.getNombre()
 					+ "], Calificación=" + calificacion + "]");
 		}
+		
 	}
 
 	public Nota(Materia materia, double calificacion) {
