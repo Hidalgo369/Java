@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -164,6 +165,78 @@ public class AdminPersonas {
 				throw new Exception("Error con la base de datos");
 			}
 		}
+	}
+
+	public static ArrayList<Persona> buscarPorNombre(String nombreBusqueda) throws Exception {
+		ArrayList<Persona> personas = new ArrayList<Persona>();
+		Connection con = null;
+		PreparedStatement ps;
+		ResultSet rs = null;
+
+		try {
+			con = ConexionBDD.conectar();
+			ps = con.prepareStatement("select * from persona where nombre like ?");
+			ps.setString(1, "%" + nombreBusqueda + "%");
+
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				String nombre = rs.getString("nombre");
+				String cedula = rs.getString("cedula");
+				Persona p = new Persona();
+				p.setCedula(cedula);
+				p.setNombre(nombre);
+				personas.add(p);
+			}
+
+		} catch (Exception e) {
+			LOGGER.error("Error al consultar por nombre", e);
+			throw new Exception("Error al consultar por nombre");
+		} finally {
+			try {
+				con.close();
+			} catch (SQLException e) {
+				LOGGER.error("Error con la base de datos", e);
+				throw new Exception("Error con la base de datos");
+			}
+		}
+		return personas;
+	}
+
+	public static ArrayList<String> consultarTodasLasPersonas() throws Exception {
+		ArrayList<String> personas = new ArrayList<>();
+		Connection con = null;
+		PreparedStatement ps;
+		ResultSet rs = null;
+
+		try {
+			con = ConexionBDD.conectar();
+			ps = con.prepareStatement("select * from persona");
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				String cedula = rs.getString("cedula");
+				String nombre = rs.getString("nombre");
+				String apellido = rs.getString("apellido");
+		
+				String personaStr = "Persona [cedula=" + cedula + ", nombre=" + nombre + ", apellido=" + apellido + "]\n";
+				personas.add(personaStr);
+			}
+
+		} catch (Exception e) {
+			LOGGER.error("Error al consultar todas las personas", e);
+			throw new Exception("Error al consultar todas las personas");
+		} finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e) {
+				LOGGER.error("Error con la base de datos", e);
+				throw new Exception("Error con la base de datos");
+			}
+		}
+		return personas;
 	}
 
 }
