@@ -1,27 +1,80 @@
 package com.krakedev.persistencia.servicios;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.krakedev.persistencia.entidades.EstadoCivil;
 import com.krakedev.persistencia.entidades.Persona;
 import com.krakedev.persistencia.utils.ConexionBDD;
+import com.krakedev.persistencia.utils.Convertidor;
 
 public class AdminPersonas {
 
 	private static final Logger LOGGER = LogManager.getLogger(AdminPersonas.class);
 
+	public static Persona consultar(String cedula) throws Exception {
+		Connection con = null;
+		PreparedStatement ps;
+		ResultSet rs = null;
+
+		LOGGER.trace("Cedula de persona al que se desea consultar >> " + cedula);
+
+		try {
+			con = ConexionBDD.conectar();
+			ps = con.prepareStatement("select p.cedula, p.nombre, p.apellido, p.estado_civil_codigo, ec.descripcion, "
+					+ "p.numero_hijos, p.estatura, p.cantidad_ahorrada, p.fecha_nacimiento, p.hora_nacimiento "
+					+ "from persona p, estado_civil ec " + "where p.estado_civil_codigo = ec.codigo and p.cedula = ?");
+
+			ps.setString(1, cedula);
+
+			rs = ps.executeQuery();
+
+			if (rs.next()) {
+				String nombre = rs.getString("nombre");
+				String apellido = rs.getString("apellido");
+				String estadoCivilCodigo = rs.getString("estado_civil_codigo");
+				String estadoCivilDescripcion = rs.getString("descripcion");
+				EstadoCivil estadoCivil = new EstadoCivil(estadoCivilCodigo, estadoCivilDescripcion);
+				int numero_hijos = rs.getInt("numero_hijos");
+				double estatura = rs.getDouble("estatura");
+				String cantidadAhorradaStr = rs.getString("cantidad_ahorrada");
+				BigDecimal cantidadAhorrada = Convertidor.convertirADecimal(cantidadAhorradaStr);
+				Date fechaNacimiento = rs.getDate("fecha_nacimiento");
+				Time horaNacimiento = rs.getTime("hora_nacimiento");
+
+				return new Persona(cedula, nombre, apellido, estadoCivil, numero_hijos, estatura, cantidadAhorrada,
+						fechaNacimiento, horaNacimiento);
+			} else {
+				throw new Exception("No se encontró la persona con la cédula: " + cedula);
+			}
+
+		} catch (Exception e) {
+			LOGGER.error("Error al consultar", e);
+			throw new Exception("Error al consultar");
+		} finally {
+			try {
+				con.close();
+			} catch (SQLException e) {
+				LOGGER.error("Error con la base de datos", e);
+				throw new Exception("Error con la base de datos");
+			}
+		}
+	}
+
 	public static void insertar(Persona persona) throws Exception {
 		Connection con = null;
 		PreparedStatement ps;
 		LOGGER.trace("Persona a insertar>>> " + persona);
-		
+
 		try {
-			// abrir la conexion
 			con = ConexionBDD.conectar();
 			ps = con.prepareStatement(
 					"insert into persona (cedula, nombre, apellido, estado_civil_codigo, numero_hijos, estatura, cantidad_ahorrada, fecha_nacimiento, hora_nacimiento)"
@@ -56,11 +109,11 @@ public class AdminPersonas {
 		Connection con = null;
 		PreparedStatement ps;
 		LOGGER.trace("Persona ha actualizar datos >>> " + persona);
-		
+
 		try {
 			con = ConexionBDD.conectar();
 			ps = con.prepareStatement(
-					"update personas set nombre = ?, apellido = ?, estado_civil_codigo = ?, numero_hijos = ?, estatura = ?, cantidad_ahorrada = ?, fecha_nacimiento = ?, hora_nacimiento = ? where cedula = ?");
+					"update persona set nombre = ?, apellido = ?, estado_civil_codigo = ?, numero_hijos = ?, estatura = ?, cantidad_ahorrada = ?, fecha_nacimiento = ?, hora_nacimiento = ? where cedula = ?");
 
 			ps.setString(1, persona.getNombre());
 			ps.setString(2, persona.getApellido());
@@ -75,8 +128,8 @@ public class AdminPersonas {
 			ps.executeUpdate();
 
 		} catch (Exception e) {
-			LOGGER.error("Error al insertar", e);
-			throw new Exception("Error al insertar");
+			LOGGER.error("Error al actualizar", e);
+			throw new Exception("Error al actualizar");
 		} finally {
 			try {
 				con.close();
@@ -86,4 +139,31 @@ public class AdminPersonas {
 			}
 		}
 	}
+
+	public static void eliminar(String cedula) throws Exception {
+		Connection con = null;
+		PreparedStatement ps;
+		LOGGER.trace("Cedula de persona al que se desea eliminar información >>> " + cedula);
+
+		try {
+			con = ConexionBDD.conectar();
+			ps = con.prepareStatement("delete from persona where cedula = ?");
+
+			ps.setString(1, cedula);
+
+			ps.executeUpdate();
+
+		} catch (Exception e) {
+			LOGGER.error("Error al eliminar", e);
+			throw new Exception("Error al eliminar");
+		} finally {
+			try {
+				con.close();
+			} catch (SQLException e) {
+				LOGGER.error("Error con la base de datos", e);
+				throw new Exception("Error con la base de datos");
+			}
+		}
+	}
+
 }

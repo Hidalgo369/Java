@@ -23,7 +23,7 @@ public class TestAdminPersona {
 			AdminPersonas.insertar(p);
 
 		} catch (Exception e) {
-			System.out.println("Error en el sistema: " + e.getMessage());
+			System.out.println("Error en el sistema, no se registró la persona: " + e.getMessage());
 		}
 	}
 

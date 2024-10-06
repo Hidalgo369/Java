@@ -1,5 +1,6 @@
 package com.krakedev.persistencia.utils;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,6 +38,14 @@ public class Convertidor {
 			throw new Exception("La hora no tiene el formato correcto " + horaStr);
 		}
 		return horaDate;
+	}
+	
+	public static BigDecimal convertirADecimal(String cantidad) {
+	    cantidad = cantidad.replaceAll("€", "");
+	    cantidad = cantidad.replaceAll("\\.", ""); 
+	    cantidad = cantidad.replace(",", ".");
+	    cantidad = cantidad.trim(); 
+	    return new BigDecimal(cantidad);
 	}
 
 }
